@@ -121,9 +121,23 @@ nyc_airbnb %>%
 ## retry leaflet
 
 ``` r
+pal = colorNumeric("viridis", NULL)
+
 nyc_airbnb %>% 
-  filter()
+  mutate(
+    labels = str_c("<b>Price", price, "</b><br>Stars", stars)
+  ) %>% view 
+
+nyc_airbnb %>% 
+  filter(price < 500) %>% 
+  sample_n(1000) %>% 
+  mutate(
+    labels = str_c("<b> Price", price, "</b><br> Stars", stars)
+  ) %>% 
   leaflet() %>% 
-  addTiles() %>% 
-  addMarkers(~lat, ~lng)
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircleMarkers(~lat, ~long, radius = 1, popup = ~ labels, color = ~ pal(price)) 
 ```
+
+This graphic isn’t static, it’s a html graphic. If want to publish
+this–&gt; can’t knit this into github document, have to change to html.
